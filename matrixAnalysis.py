@@ -1,12 +1,11 @@
+import copy
 class MatrixAnalysis:
-    initialMatrix = [1]
-    rrefMatrix = [0]
+    #all matrices must be rectangular
 
-    def __init__(self, inputMatrix):
-        self.initialMatrix=inputMatrix
-        self.rrefMatrix = self.row_reduce(self.initialMatrix)
-
-    def row_reduce(self, inputMatrix):
+    #only works for linearly independent
+    @staticmethod
+    def row_reduce(matrix1):
+        inputMatrix = copy.deepcopy(matrix1)
         for rownum in range (len(inputMatrix)):
             pivot = 0
             pivot_colnum = "WAIT"
@@ -27,17 +26,83 @@ class MatrixAnalysis:
                         inputMatrix[nest_rownum][nest_colnum] -= inputMatrix[rownum][nest_colnum]*scalar
         return inputMatrix
     
-    def print_rref(self):
-        for row in self.rrefMatrix:
+    @staticmethod
+    def transpose(matrix1):
+        new_matrix=[]
+        for _ in range(len(matrix1[0])):
+            new_matrix.append([0] * len(matrix1))
+        for row in range(len(matrix1)):
+            for col in range(len(matrix1[row])):
+                new_matrix[col][row] = matrix1[row][col]
+        return new_matrix
+
+    @staticmethod
+    def flatten(matrix1):
+        flat_matrix = []
+        for row in range(len(matrix1)):
+            for col in range(len(matrix1[row])):
+               flat_matrix.append(matrix1[row][col])
+        return flat_matrix
+
+    @staticmethod
+    def determinant(matrix1, matrix2):
+        return "In development"
+
+    #requires square matrix with non-zero determinant
+    @staticmethod
+    def inverse(matrix1, matrix2):
+        return "In development"
+    
+    #only vectors
+    @staticmethod
+    def dot(vector1, vector2):
+        result=[vector1[item]*vector2[item] for item in range(len(vector1))]
+        return result
+    
+    #requires identical matrices
+    @staticmethod
+    def add(matrix1, matrix2):
+        result = [[matrix1[row][col] + matrix2[row][col] 
+                   for col in range(len(matrix1[row]))] 
+                   for row in range(len(matrix1))]
+        return result
+    
+    #requires identical matrices
+    @staticmethod
+    def subtract(matrix1, matrix2):
+        result = [[matrix1[row][col]-matrix2[row][col] 
+                   for col in range(len(matrix1[row]))] 
+                   for row in range(len(matrix1))]
+        # for row in range(len(matrix1)):
+        #     for col in range(len(matrix1[row])):
+        #         matrix1[row][col] -= matrix2[row][col]
+        return result
+    
+    #requires mxn and nxo matrices
+    @staticmethod
+    def matrix_multiply(matrix1,matrix2):
+        return "In development"
+    
+    @staticmethod
+    def print_matrix(matrix1):
+        for row in matrix1:
             print(row)
-                        
+    
+    
 matrix = [
-    [4, -2, 5, -5],
-    [-9, 7, -8, 0],
-    [-6, 4, 5, 3],
-    [5, -3, 8, -4]
-
+    [1, 2, 3],
+    [5, 12, 5]
 ]
-matrixSolver = MatrixAnalysis(matrix)
+matrixe = [
+    [1, 2, 3],
+    [5, 12, 6]
+]
+vector=[1,2,3]
+vectore=[2,3,4]
 
-matrixSolver.print_rref()
+#MatrixAnalysis.print_matrix(MatrixAnalysis.row_reduce(matrix))
+MatrixAnalysis.print_matrix(MatrixAnalysis.add(matrix,matrixe))
+MatrixAnalysis.print_matrix(MatrixAnalysis.subtract(matrix,matrixe))
+#MatrixAnalysis.print_matrix(MatrixAnalysis.flatten(matrix))
+#MatrixAnalysis.print_matrix(MatrixAnalysis.transpose(matrix))
+#print(MatrixAnalysis.dot(vector,vectore))
