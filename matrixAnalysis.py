@@ -121,10 +121,12 @@ class MatrixAnalysis:
         else:
             return result, determinant
     
-    #needs a check
     @staticmethod
     def dot(vector1, vector2):
         """Finds dot product of vectors. Vectors must be the same length."""
+        if len(vector1) != len(vector2) or vector1[0] is None or type(vector1[0]) != type(vector2[0]):
+            print("Please input valid vectors")
+            return
         result=[vector1[item]*vector2[item] for item in range(len(vector1))]
         return sum(result)
 
@@ -152,10 +154,12 @@ class MatrixAnalysis:
         result = [[matrix1[row][col]*scalar for col in range(len(matrix1[row]))] for row in range(len(matrix1))]
         return result
     
-    #needs a check
     @staticmethod
     def matrix_multiply(matrix1,matrix2):
         """Multiplies two matrices. Matrix1 must be an MxN matrix and Matrix2 must be an NxO matrix. Resulting Matrix will be MxO."""
+        if not (MatrixAnalysis.check_matrix(matrix1) and MatrixAnalysis.check_matrix(matrix2) and len(matrix1[0]) == len(matrix2)):
+            print("Please input valid matrices")
+            return
         matrix2_adjust = MatrixAnalysis.transpose(matrix2)
         result = [[MatrixAnalysis.dot(matrix1[row],matrix2_adjust[row2]) for row2 in range(len(matrix2_adjust))] for row in range(len(matrix1))]
         return result
@@ -203,17 +207,17 @@ test = [[1,2,3],
 
 test1 = [[2,1],
         [1,3]]
-# MatrixAnalysis.print_matrix(MatrixAnalysis.row_reduce(linear_dep))
-# MatrixAnalysis.print_matrix(MatrixAnalysis.add(matrix,matrixe))
-# MatrixAnalysis.print_matrix(MatrixAnalysis.subtract(matrix,matrixe))
-# print(MatrixAnalysis.flatten(matrix))
-# MatrixAnalysis.print_matrix(MatrixAnalysis.transpose(matrix))
-# print(MatrixAnalysis.dot(vector,vectore))
-# print(MatrixAnalysis.determinant(test))
-# MatrixAnalysis.print_matrix(MatrixAnalysis.scale(test,2))
-# MatrixAnalysis.print_matrix(MatrixAnalysis.cofactor(test))
-# MatrixAnalysis.print_matrix(MatrixAnalysis.matrix_multiply(matrix,test))
-# res, det = MatrixAnalysis.inverse(test1,False)
-# MatrixAnalysis.print_matrix(res)
-# print("1/" + str(det))
-# print(str(MatrixAnalysis.check_matrix(test, check_Square=True)))
+MatrixAnalysis.print_matrix(MatrixAnalysis.row_reduce(linear_dep))
+MatrixAnalysis.print_matrix(MatrixAnalysis.add(matrix,matrixe))
+MatrixAnalysis.print_matrix(MatrixAnalysis.subtract(matrix,matrixe))
+print(MatrixAnalysis.flatten(matrix))
+MatrixAnalysis.print_matrix(MatrixAnalysis.transpose(matrix))
+print(MatrixAnalysis.dot(vector,vectore))
+print(MatrixAnalysis.determinant(test))
+MatrixAnalysis.print_matrix(MatrixAnalysis.scale(test,2))
+MatrixAnalysis.print_matrix(MatrixAnalysis.cofactor(test))
+MatrixAnalysis.print_matrix(MatrixAnalysis.matrix_multiply(matrix,test))
+res, det = MatrixAnalysis.inverse(test1,False)
+MatrixAnalysis.print_matrix(res)
+print("1/" + str(det))
+print(str(MatrixAnalysis.check_matrix(test, check_Square=True)))
