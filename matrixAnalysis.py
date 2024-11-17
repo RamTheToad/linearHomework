@@ -1,4 +1,3 @@
-import copy
 class MatrixAnalysis:
     #all matrices must be rectangular
     @staticmethod
@@ -6,7 +5,10 @@ class MatrixAnalysis:
         """
         Outputs Matrix in Row Reduced Echelon Format.
         """
-        inputMatrix = copy.deepcopy(matrix1)
+        if not MatrixAnalysis.check_matrix(matrix1):
+            print("Please input a valid matrix")
+            return
+        inputMatrix = [row[:] for row in matrix1]
         for rownum in range(len(inputMatrix)):
             pivot = 0
             pivot_colnum = "WAIT"
@@ -32,6 +34,9 @@ class MatrixAnalysis:
         """
         Transposes matrix(rows to columns columns to rows)
         """
+        if not MatrixAnalysis.check_matrix(matrix1):
+            print("Please input a valid matrix")
+            return
         new_matrix=[([0] * len(matrix1)) for _ in range(len(matrix1[0]))]
         for row in range(len(matrix1)):
             for col in range(len(matrix1[row])):
@@ -43,52 +48,60 @@ class MatrixAnalysis:
         """
         Creates a cofactor matrix(checkerboard signs)
         """
+        if not MatrixAnalysis.check_matrix(matrix1):
+            print("Please input a valid matrix")
+            return
         result = [[matrix1[row][col] * pow(-1,(row+col)) for col in range(len(matrix1[row]))] for row in range(len(matrix1))]
         return result
     
     @staticmethod
     def flatten(matrix1):
         """
-        Flattens Matrix/Turns N-Dimension Matrix to 1-Dimension Matrix. Does not sort.
+        Flattens Matrix/Turns N-Dimension Matrix to 1-Dimension Matrix. Does not resort.
         """
         flat_matrix = [matrix1[row][col] for row in range(len(matrix1)) for col in range(len(matrix1[row]))]
         return flat_matrix
 
-    #needs a check
     @staticmethod
     def determinant(matrix1):
         """
         Finds Determinant of a matrix. Requires a NxN square Matrix where N>1.
         """
-        determinant
+        if not MatrixAnalysis.check_matrix(matrix1, check_Square=True):
+            print("Please input a valid matrix")
+            return
+        determinant = 0
         if len(matrix1)>2:
             for item in range(len(matrix1[0])):
-                relevant_matrix = copy.deepcopy(matrix1)
+                relevant_matrix = [row[:] for row in matrix1]
                 relevant_matrix.pop(0)
                 for row in range(len(relevant_matrix)):
                     relevant_matrix[row].pop(item)
                 determinant+=MatrixAnalysis.determinant(relevant_matrix)*matrix1[0][item]*pow(-1,item)
-        elif len == 2:
+        elif len(matrix1) == 2:
             determinant = matrix1[0][0]*matrix1[1][1]-matrix1[0][1]*matrix1[1][0]
         else:
             determinant = "Unable to calculate Matrix. Ensure the dimensions of your matrix are greater than 1."
         return determinant
 
-    #needs a check
     @staticmethod
     def inverse(matrix1, multiplyDet=True):
         """
         Finds the inverse of the provided matrix. Requires a square Matrix.
         """
+        if not MatrixAnalysis.check_matrix(matrix1, check_Square=True):
+            print("Please input a valid matrix")
+            return
         determinant = MatrixAnalysis.determinant(matrix1)
         if determinant == 0:
             return("No inverse exists; Determinant is 0")
-        result = copy.deepcopy(matrix1)
+        result = [row[:] for row in matrix1]
+
         #Make Matrix of Minors(DONE)
         if len(matrix1)>2:
             for row in range(len(matrix1)):
                 for col in range(len(matrix1[row])):
-                    relevant_matrix = copy.deepcopy(matrix1)
+                    relevant_matrix = [row[:] for row in matrix1]
                     relevant_matrix.pop(row)
                     for row_nest in range(len(relevant_matrix)):
                         relevant_matrix[row_nest].pop(col)
@@ -115,17 +128,21 @@ class MatrixAnalysis:
         result=[vector1[item]*vector2[item] for item in range(len(vector1))]
         return sum(result)
 
-    #needs a check
     @staticmethod
     def add(matrix1, matrix2):
-        """Adds Matrices. Matrices must be identical."""
+        """Adds Matrices. Matrices must have the same dimensions"""
+        if not(MatrixAnalysis.check_matrix(matrix1) and MatrixAnalysis.check_matrix(matrix2) and len(matrix1) == len(matrix2) and len(matrix1) == len(matrix2)):
+            print("Please input valid matrices")
+            return
         result = [[matrix1[row][col] + matrix2[row][col] for col in range(len(matrix1[row]))] for row in range(len(matrix1))]
         return result
     
-    #needs a check
     @staticmethod
     def subtract(matrix1, matrix2):
-        """Subtracts Matrices. Matrices must be identical."""
+        """Subtracts Matrices. Matrices must have the same dimensions."""
+        if not(MatrixAnalysis.check_matrix(matrix1) and MatrixAnalysis.check_matrix(matrix2) and len(matrix1) == len(matrix2) and len(matrix1) == len(matrix2)):
+            print("Please input valid matrices")
+            return
         result = [[matrix1[row][col] - matrix2[row][col] for col in range(len(matrix1[row]))] for row in range(len(matrix1))]
         return result
     
@@ -149,6 +166,17 @@ class MatrixAnalysis:
         for row in matrix1:
             print(row)
 
+    @staticmethod
+    def check_matrix(matrix1, check_Square = False):
+        if type(matrix1[0]) != type([1,1,1]) or len(matrix1) <= 1:
+            return False
+        col_len = len(matrix1[0])
+        for row in range(1, len(matrix1)):
+            if col_len != len(matrix1[row]):
+                return False
+        if check_Square == True:
+            return (col_len==len(matrix1))
+        return True
     
     
 matrix = [
@@ -175,16 +203,17 @@ test = [[1,2,3],
 
 test1 = [[2,1],
         [1,3]]
-MatrixAnalysis.print_matrix(MatrixAnalysis.row_reduce(linear_dep))
-#MatrixAnalysis.print_matrix(MatrixAnalysis.add(matrix,matrixe))
-#MatrixAnalysis.print_matrix(MatrixAnalysis.subtract(matrix,matrixe))
+# MatrixAnalysis.print_matrix(MatrixAnalysis.row_reduce(linear_dep))
+# MatrixAnalysis.print_matrix(MatrixAnalysis.add(matrix,matrixe))
+# MatrixAnalysis.print_matrix(MatrixAnalysis.subtract(matrix,matrixe))
 # print(MatrixAnalysis.flatten(matrix))
 # MatrixAnalysis.print_matrix(MatrixAnalysis.transpose(matrix))
-#print(MatrixAnalysis.dot(vector,vectore))
+# print(MatrixAnalysis.dot(vector,vectore))
 # print(MatrixAnalysis.determinant(test))
-#MatrixAnalysis.print_matrix(MatrixAnalysis.scale(test,2))
-#MatrixAnalysis.print_matrix(MatrixAnalysis.cofactor(test))
-#MatrixAnalysis.print_matrix(MatrixAnalysis.matrix_multiply(matrix,test))
-#res, det = MatrixAnalysis.inverse(test1,False)
-#MatrixAnalysis.print_matrix(res)
-#print("1/" + str(det))
+# MatrixAnalysis.print_matrix(MatrixAnalysis.scale(test,2))
+# MatrixAnalysis.print_matrix(MatrixAnalysis.cofactor(test))
+# MatrixAnalysis.print_matrix(MatrixAnalysis.matrix_multiply(matrix,test))
+# res, det = MatrixAnalysis.inverse(test1,False)
+# MatrixAnalysis.print_matrix(res)
+# print("1/" + str(det))
+# print(str(MatrixAnalysis.check_matrix(test, check_Square=True)))
